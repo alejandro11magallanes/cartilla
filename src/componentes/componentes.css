@@ -1,0 +1,32 @@
+.containerPrincipal{
+    position: absolute;
+    left: 60%;
+    top: 50%;
+    width: 30%;
+    transform: translate(-50%, -50%);
+    padding: 0px 0px 0px 0px;
+    background-color:white;
+}
+
+.containerSecundario{
+    text-align: center;
+}
+.containerTres{
+    margin-left: 50%;
+}
+
+.perro{
+    width: 80%;
+    height: 100%;
+    position: absolute;
+    margin-left: -80%;
+}
+.tituloL{
+    color: purple;
+    font-weight: bold;
+    font-size: 50px;
+}
+
+.perroRegistro{
+    padding: 100px;
+}
