@@ -2,6 +2,8 @@ import { Table, Input, Button, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import React from 'react';
+import axios from "axios";
+const urlApi = ' http://127.0.0.1:4444/tipousu';
 
 const data = [
   {

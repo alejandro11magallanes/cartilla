@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, message} from 'antd';
 import {Link} from 'react-router-dom'
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 import './componentes.css';
 import image from "./logopiki.png";
 import axios from "axios";
@@ -27,7 +27,7 @@ export default class login extends Component {
           }, });
         }, 1000);
         window.setTimeout(function() {
-          window.location.href = './inicio';
+          window.location.href = './inicio/menuProp';
       }, 3000);
       }).catch(errorInfo =>{
         console.log(errorInfo);
@@ -48,28 +48,11 @@ export default class login extends Component {
 
     const key = 'updatable';
 
-    const formItemLayout = {
-      labelCol: {
-        xs:{
-          span: 12,
-        },
-        sm:{
-          span:8,
-        },
-      },
-      wrapperCol:{
-        xs:{
-          span: 4,
-        },
-        sm:{
-          span: 20,
-        },
-      }
-    };
+   
 
     return (
         <div className='containerPrincipal'>
-          <img className='perro' src={image}/>
+          <img className='perro' src={image} alt=""/>
           <div className='containerSecundario'>
               <h1 className="tituloL">Bienvenido</h1>
               <Form name='login' onFinish={onFinish} onFinishFailed={onFinishFailed} >

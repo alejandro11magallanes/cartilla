@@ -1,9 +1,9 @@
-import { Layout, Menu } from 'antd';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { Layout } from 'antd';
+
 import React from 'react';
 import './menuProp.css'
 import Siderd from './SideBar'
-import Tabla from './tabla';
+import Tabla from './tipoUsuario';
 import SaveModal from './saveModal';
 
 const { Header, Content, Footer, Sider } = Layout;

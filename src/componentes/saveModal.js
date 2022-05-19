@@ -1,6 +1,5 @@
 import { Modal, Button } from 'antd';
 import React from 'react';
-import { PlusCircleOutlined } from '@ant-design/icons';
 import Demo from './formSaveTypeUser';
 import image from '../imagenes/plus.png'
 import './menuProp.css'
@@ -29,11 +28,11 @@ class SaveModal extends React.Component {
   };
 
   render() {
-    const { visible, loading } = this.state;
+    const { visible } = this.state;
     return (
       <>
         <a onClick={this.showModal}>
-        <img src={image} width={50} style={{float:'left'}}></img>
+        <img src={image} width={50} style={{float:'left'}} alt=""/>
         </a>
         <h1 className='user-type' style={{marginLeft:60}}>Tipo Usuario</h1>
         <Modal
