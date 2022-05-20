@@ -6,6 +6,7 @@ import Siderd from './SideBar'
 import Tabla from './tipoUsuario';
 import SaveModalMenu from './saveModalMenu';
 import TableMenu from './tableMenus';
+import Pm from './ProgramasMenus';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -30,6 +31,9 @@ export default () => (
         <div className="site-layout-background" style={{ padding: 24, minHeight: 360}}>
             <SaveModalMenu /><br></br><br></br>
             <TableMenu />
+
+            <Pm />
+
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}></Footer>
