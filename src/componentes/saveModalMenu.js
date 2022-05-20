@@ -1,11 +1,11 @@
-import { Modal, Button, Form } from 'antd';
+import { Modal, Button } from 'antd';
 import React from 'react';
 import Demo from './formSaveTypeUser';
 import image from '../imagenes/plus.png'
 import './menuProp.css'
 import FormMenu from './formSaveMenu';
 
-class SaveModal extends React.Component {
+class SaveModalMenu extends React.Component {
   state = {
     loading: false,
     visible: false,
@@ -35,10 +35,10 @@ class SaveModal extends React.Component {
         <a onClick={this.showModal}>
         <img src={image} width={50} style={{float:'left'}} alt=""/>
         </a>
-        <h1 className='user-type' style={{marginLeft:60}}>Tipo Usuario</h1>
+        <h1 className='user-type' style={{marginLeft:60}}>Menús</h1>
         <Modal
           visible={visible}
-          title="Nuevo tipo de usuario"
+          title="Nuevo menu"
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
@@ -48,7 +48,7 @@ class SaveModal extends React.Component {
           ]}
         >
 
-          <Demo />
+            <FormMenu />
 
         </Modal>
       </>
@@ -56,4 +56,4 @@ class SaveModal extends React.Component {
   }
 }
 
-export default SaveModal;
+export default SaveModalMenu;
