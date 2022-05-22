@@ -30,3 +30,9 @@
 .perroRegistro{
     padding: 100px;
 }
+
+.btn-transparente {
+    cursor: pointer;
+    background-color: transparent;
+    border-color: transparent;
+}

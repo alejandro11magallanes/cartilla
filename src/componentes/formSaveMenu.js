@@ -5,7 +5,7 @@ import './componentes.css';
 import 'antd/dist/antd.min.css';
 
 const {Item} = Form;
-const urlApi = 'http://127.0.0.1:4444/menu'
+const urlApi = 'http://127.0.0.1:4444/menu/create'
 
 const FormMenu = () => {
     const key = 'updatable';
@@ -86,13 +86,26 @@ const FormMenu = () => {
       </Form.Item>
 
       <Form.Item
+        label="Descripción"
+        name="MEN_DESC"
+        rules={[
+          {
+            required: true,
+            message: 'Inserta una descripción!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
         wrapperCol={{
           offset: 6,
           span: 6,
         }}
       >
         <Button type="primary" htmlType="submit">
-          Submit
+          Guardar
         </Button>
       </Form.Item>
     </Form>

@@ -9,15 +9,32 @@ import FormularioProveedor from "./FormProvedor";
 import { render } from '@testing-library/react';
 import axios from 'axios';
 const urlApi = 'http://127.0.0.1:4444/menu'
+const urlApic = 'http://127.0.0.1:4444/menu/count'
 
 const Pm = () => {
 
   const [data, setData] = useState([]);
-  const [valor, setValue] = useState(true);
+  const [valor, setValue] = useState(null);
   const { Option } = Select;
 
-    const traerTabla = async () => {
-        axios.get(urlApi).then((response) =>
+    const cantidad = async () => {
+        axios.get(urlApic).then((response) =>
+        traerTabla(response.data)
+        ).catch(error =>{
+            console.log(error);
+        })
+    }
+
+    const traerTabla = async (valor) => {
+        axios.post(urlApi,{MEN_NUMCTRL:"", MEN_CLAVE:"", MEN_NOMBRE:"", MEN_DESC:"", ORDER:"", BY:"", LIMIT1:0, LIMIT2:valor},{
+
+          "headers": {
+          
+          "content-type": "application/json",
+          
+          },
+          
+          }).then((response) =>
         setData(response.data)
         ).catch(error =>{
             console.log(error);
@@ -25,7 +42,7 @@ const Pm = () => {
     }
 
     useEffect(()=>{
-        traerTabla();
+      cantidad()
     },[])
 
   function handleChange(value) {
