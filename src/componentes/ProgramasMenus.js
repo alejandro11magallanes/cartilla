@@ -97,8 +97,11 @@ const Pm = () => {
       })
   }
 
-  const traerTabla2 = async () => {
-    axios.post(urlApi2, {MEN_NUMCTROL: "", PRG_NOMBRE: "", PRG_CLAVE:nmb, PRG_DESC: des, MEN_NOMBRE: "", ORDER: ord, BY: BY, LIMIT1:LIM1, LIMIT2: lim2},{
+  const traerTabla2 = async (clave) => {
+    if(clave == null){
+      clave = men
+    }
+    axios.post(urlApi2, {MEN_NUMCTRL: clave, PRG_NOMBRE: "", PRG_CLAVE:nmb, PRG_DESC: des, MEN_NOMBRE: "", ORDER: ord, BY: BY, LIMIT1:LIM1, LIMIT2: lim2},{
 
       "headers": {
       
@@ -119,8 +122,8 @@ const Pm = () => {
 
   const handleChange =(value)=> {
     console.log(value)
-    traerTabla2()
     setmen(value)
+    traerTabla2(value)
     if(value!=""){
       setestado(true)
     }
@@ -192,7 +195,7 @@ const Pm = () => {
                   }} onChange={(x)=>{
                       setnmb(x.target.value)
                   }}/><button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
-                      setord("PRG_NOMBRE")
+                      setord("PRG_CLAVE")
                       traerTabla2()
                   }}><img src={az}/></button>
                   </Form.Item>
