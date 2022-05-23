@@ -9,10 +9,11 @@ const urlApi = 'http://127.0.0.1:4444/proxmen/create'
 
 function FormPXM (props){
     const [prg, setprg] = useState(null)
-    const [men, setmen] = useState(null)
+    const [mens, setmens] = useState(null)
     const key = 'updatable';
+    const PR = "SOY VALOR"
     const onFinish =async () => {
-        await axios.post(urlApi,{PRG_NUMCTRL:prg, MEN_NUMCTRL:men}).then((response)=>{
+        await axios.post(urlApi,{PRG_NUMCTRL: prg, MEN_NUMCTRL: mens}).then((response)=>{
             console.log(response.data);
             message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
             marginTop: '18vh',
@@ -23,7 +24,7 @@ function FormPXM (props){
             }, });
             }, 1000);
             window.setTimeout(function() {
-            window.location.reload();
+            window.location.reload()
         }, 4000);
         }).catch(errorInfo =>{
             console.log(errorInfo);
@@ -44,7 +45,7 @@ function FormPXM (props){
 
   return (
     <div>
-        <Form
+      <Form
       name="login"
       labelCol={{
         span: 6,
@@ -64,7 +65,7 @@ function FormPXM (props){
           span: 12,
         }}
         label="Programa"
-        name="programa"
+        name="PRG_NUMCTRL"
         rules={[
           {
             required: true,
@@ -74,7 +75,7 @@ function FormPXM (props){
       >
         <Input onChange={(x)=>{
           setprg(x.target.value)
-          setmen(props.valor)
+          setmens(props.valor)
         }}/>
       </Form.Item>
 

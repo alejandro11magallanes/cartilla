@@ -31,6 +31,7 @@ const Pm = () => {
   const [ord, setord] = useState("")
   const [men, setmen] = useState("")
   const [lim2, setlim2] = useState(1000)
+  const [lim22, setlim22] = useState(1000)
   const [estado, setestado] = useState(false)
 
     const cantidad = async () => {
