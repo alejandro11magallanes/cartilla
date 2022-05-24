@@ -149,47 +149,58 @@ function TableMenu() {
 
         <Form>
             <Row>
-            <Col lg={4}>
+            <Col lg={2} style={{padding:5}}>
             <Form.Item>
             <Input value={clv} placeholder='Clave' onClick={()=>{
                 setnmb("")
                 setdes("")
             }} onChange={(x)=>{
                 setclv(x.target.value)
-            }}/><button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                traerTabla()
+            }}/>
+            </Form.Item>
+            </Col>
+            <Col>
+            <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
                 setord("MEN_CLAVE")
                 traerTabla()
             }}><img src={az}/></button>
-            </Form.Item>
             </Col>
-            <Col lg={4} offset={1}>
+            <Col lg={2} offset={1} style={{padding:5}}>
             <Form.Item>
             <Input value={nmb} placeholder="Nombre" onClick={()=>{
                 setclv("")
                 setdes("")
             }} onChange={(a)=>{
                 setnmb(a.target.value)
-            }}/><button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                traerTabla()
+            }}/>
+            </Form.Item>
+            </Col>
+            <Col>
+            <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
                 setord("MEN_NOMBRE")
                 traerTabla()
             }}><img src={az}/></button>
-            </Form.Item>
             </Col>
-            <Col lg={4} offset={1}>
+            <Col lg={2} offset={1} style={{padding:5}}>
             <Form.Item>
             <Input value={des} placeholder="Descripción" onClick={()=>{
                 setclv("")
                 setnmb("")
             }} onChange={(b)=>{
                 setdes(b.target.value)
-            }}/><button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                traerTabla()
+            }}/>
+            </Form.Item>
+            </Col>
+            <Col>
+            <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
                 setord("MEN_DESC")
                 traerTabla()
             }}><img src={az}/></button>
-            </Form.Item>
             </Col>
-
-            <Col lg={2} offset={1}>
+            <Col lg={2} offset={1} style={{padding:5}}>
                         <Form.Item>
                         <Input defaultValue={10} placeholder='Mostrar' onKeyPress={(event) => {
                         if (!/[0-9]/.test(event.key)) {
@@ -204,23 +215,14 @@ function TableMenu() {
                         }}/>
                         </Form.Item>
                 </Col>
-
-            <Col lg={2} offset={1}>
-            <Form.Item>
-        <Button type="primary" htmlType="submit" onClick={()=>{
-            traerTabla()
-        }}>
-          Buscar
-        </Button>
-      </Form.Item>
-            </Col>
-            <Col lg={2} offset={1}>
+            <Col lg={2} offset={1} style={{padding:5}}>
             <Form.Item>
         <Button type="danger" htmlType="submit" onClick={()=>{
             setdes("")
             setclv("")
             setnmb("")
             setord("")
+            traerTabla()
         }}>
           Limpiar Filtros
         </Button>
@@ -230,7 +232,7 @@ function TableMenu() {
         </Form>
         </div>
 
-        <Table columns={columns} dataSource={data}/>
+        <Table pagination={{position:["topRight"]}} columns={columns} dataSource={data}/>
         <Modal title="Editar menú" okText="Actualizar" cancelText="Regresar" visible={edit} onCancel={()=>{
             setEdit(false)
         }} onOk={()=>{

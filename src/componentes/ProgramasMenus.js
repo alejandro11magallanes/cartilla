@@ -134,7 +134,7 @@ const Pm = () => {
   let dataLIST = data.length > 0
   && data.map((item, i=0) => {
   return (
-      <Select.Option key={i} value={item.MEN_NUMCTRL}>{item.MEN_CLAVE}</Select.Option>
+      <Select.Option key={i} value={item.MEN_NUMCTRL}>{item.MEN_NOMBRE}</Select.Option>
   )
 }, this);
 
@@ -188,34 +188,42 @@ const Pm = () => {
     <div>
               <Form>
                   <Row>
-                  <Col lg={4}>
+                  <Col lg={2} style={{padding:5}}>
                   <Form.Item>
                   <Input value={nmb} placeholder='Programa' onClick={()=>{
                       setnmb("")
                       setdes("")
                   }} onChange={(x)=>{
                       setnmb(x.target.value)
-                  }}/><button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                      traerTabla2()
+                  }}/>
+                  </Form.Item>
+                  </Col>
+                  <Col>
+                  <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
                       setord("PRG_CLAVE")
                       traerTabla2()
                   }}><img src={az}/></button>
-                  </Form.Item>
                   </Col>
-                  <Col lg={4} offset={1}>
+                  <Col lg={2} offset={1} style={{padding:5}}>
                   <Form.Item>
                   <Input value={des} placeholder="Etiqueta" onClick={()=>{
                       setclv("")
                       setnmb("")
                   }} onChange={(b)=>{
                       setdes(b.target.value)
-                  }}/><button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                      traerTabla2()
+                  }}/>
+                  </Form.Item>
+                  </Col>
+                  <Col>
+                  <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
                       setord("PRG_DESC")
                       traerTabla2()
                   }}><img src={az}/></button>
-                  </Form.Item>
                   </Col>
 
-                  <Col lg={2} offset={1}>
+                  <Col lg={2} offset={1} style={{padding:5}}>
                               <Form.Item>
                               <Input defaultValue={10} placeholder='Mostrar' onKeyPress={(event) => {
                               if (!/[0-9]/.test(event.key)) {
@@ -230,23 +238,14 @@ const Pm = () => {
                               }}/>
                               </Form.Item>
                       </Col>
-
-                  <Col lg={2} offset={1}>
-                  <Form.Item>
-              <Button type="primary" htmlType="submit" onClick={()=>{
-                  traerTabla2()
-              }}>
-                Buscar
-              </Button>
-            </Form.Item>
-                  </Col>
-                  <Col lg={2} offset={1}>
+                  <Col lg={2} offset={1} style={{padding:5}}>
                   <Form.Item>
               <Button type="danger" htmlType="submit" onClick={()=>{
                   setdes("")
                   setclv("")
                   setnmb("")
                   setord("")
+                  traerTabla2()
               }}>
                 Limpiar Filtros
               </Button>
@@ -256,7 +255,7 @@ const Pm = () => {
               </Form>
         </div>
 
-        <Table columns={columns} dataSource={data2}/>
+        <Table pagination={{position:["topRight"]}} columns={columns} dataSource={data2}/>
 
   </div>
   )
