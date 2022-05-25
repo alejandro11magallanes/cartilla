@@ -1,17 +1,39 @@
 import { Form, Input, Button, message} from 'antd';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField  from '@mui/material/TextField';
 import axios from "axios";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './componentes.css';
 import 'antd/dist/antd.min.css';
+import userEvent from '@testing-library/user-event';
 
 const {Item} = Form;
 const urlApi = 'http://127.0.0.1:4444/proxmen/create'
+const urlApi2 = 'http://127.0.0.1:4444/programa'
 
 function FormPXM (props){
     const [prg, setprg] = useState(null)
     const [mens, setmens] = useState(null)
     const key = 'updatable';
-    const PR = "SOY VALOR"
+    const [data, setData] = useState([]) 
+    const [valores, setValores] = useState([])
+
+    const traerTabla = async () => {
+        axios.post(urlApi2, {PRG_NUMCTRL:"",PRG_CLAVE:"", PRG_NOMBRE:"", PRG_RUTA:"", PRG_DESC:"", ORDER:"", BY:"", LIMIT1:0, LIMIT2:9999},{
+    
+          "headers": {
+          
+          "content-type": "application/json",
+          
+          },
+          
+          }).then((response) =>
+        setData(response.data)
+        ).catch(error =>{
+            console.log(error);
+        })
+    }
+
     const onFinish =async () => {
         await axios.post(urlApi,{PRG_NUMCTRL: prg, MEN_NUMCTRL: mens}).then((response)=>{
             console.log(response.data);
@@ -39,12 +61,32 @@ function FormPXM (props){
         })
     };
 
+  const handleChange=(text)=>{
+    setprg(text)
+    setmens(props.valor)
+  }
+
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
 
+  useEffect(()=>{
+    traerTabla()
+  },[])
+
+  const formatear =()=>{
+    for (let index = 0; index < data.length; index++) {
+      const element = {label:data[index].PRG_NOMBRE, valor:data[index].PRG_NUMCTRL}
+      top100Films.push(element)
+    }
+  }
+
+  const top100Films = []
+  const list = []
+  
   return (
     <div>
+
       <Form
       name="login"
       labelCol={{
@@ -60,11 +102,10 @@ function FormPXM (props){
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-
     <Form.Item wrapperCol={{
-          span: 12,
+          span: 4,
+          offset:4,
         }}
-        label="Programa"
         name="PRG_NUMCTRL"
         rules={[
           {
@@ -73,16 +114,22 @@ function FormPXM (props){
           },
         ]}
       >
-        <Input onChange={(x)=>{
-          setprg(x.target.value)
-          setmens(props.valor)
-        }}/>
+{/*         <Input onChange={(x)=>handleChange(x.target.value)}/> */}
+        <Autocomplete onClick={formatear()} onChange={(evemt, value)=>handleChange(value.valor)}
+        disablePortal
+        getOptionLabel={(option) => option.label}
+        isOptionEqualToValue={(option)=> option.valor}
+        id="combo-box-demo"
+        options={top100Films}
+        sx={{ width: 300 }}
+        renderInput={(params) => <TextField {...params} label="Programa" />}
+        />
       </Form.Item>
 
       <Form.Item
         wrapperCol={{
-          offset: 6,
-          span: 6,
+          offset: 4,
+          span: 4,
         }}
       >
         <Button type="primary" htmlType="submit">

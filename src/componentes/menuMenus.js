@@ -29,10 +29,10 @@ export default () => (
       <Header className="site-layout-sub-header-background nav-color" style={{ padding: 0 }} />
       <Content style={{ margin: '24px 16px 0' }}>
         <div className="site-layout-background" style={{ padding: 24, minHeight: 360}}>
-            <SaveModalMenu /><br></br><br></br>
-            <TableMenu />
+            {/* <SaveModalMenu /><br></br><br></br>
+            <TableMenu /> */}
 
-            {/* <Pm /> */}
+            <Pm />
 
         </div>
       </Content>
