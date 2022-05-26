@@ -16,7 +16,7 @@ function FormPXM (props){
     const [mens, setmens] = useState(null)
     const key = 'updatable';
     const [data, setData] = useState([]) 
-    const [valores, setValores] = useState([])
+    const [orden, setOrden] = useState(0)
 
     const traerTabla = async () => {
         axios.post(urlApi2, {PRG_NUMCTRL:"",PRG_CLAVE:"", PRG_NOMBRE:"", PRG_RUTA:"", PRG_DESC:"", ORDER:"", BY:"", LIMIT1:0, LIMIT2:9999},{
@@ -35,7 +35,7 @@ function FormPXM (props){
     }
 
     const onFinish =async () => {
-        await axios.post(urlApi,{PRG_NUMCTRL: prg, MEN_NUMCTRL: mens}).then((response)=>{
+        await axios.post(urlApi,{PRG_NUMCTRL: prg, MEN_NUMCTRL: mens, PXM_ORDEN: orden}).then((response)=>{
             console.log(response.data);
             message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
             marginTop: '18vh',
@@ -86,7 +86,6 @@ function FormPXM (props){
   
   return (
     <div>
-
       <Form
       name="login"
       labelCol={{
@@ -124,6 +123,29 @@ function FormPXM (props){
         sx={{ width: 300 }}
         renderInput={(params) => <TextField {...params} label="Programa" />}
         />
+      </Form.Item>
+
+      <Form.Item 
+        wrapperCol={{
+          span: 4,
+          offset:4,
+        }}
+        name="PXM_ORDEN"
+        rules={[
+          {
+            required: true,
+            message: 'Inserta el orden!',
+          },
+        ]}
+      >
+        <TextField sx={{ width: 300 }}
+        onKeyPress={(event) => {
+          if (!/[0-9]/.test(event.key)) {
+              event.preventDefault();
+              }
+          }}
+         onChange={(x)=>setOrden(x.target.value)}
+         label="Orden"/>
       </Form.Item>
 
       <Form.Item

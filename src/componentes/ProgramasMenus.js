@@ -28,7 +28,7 @@ const Pm = () => {
   const [clv, setclv] = useState("");
   const [nmb, setnmb] = useState("");
   const [des, setdes] = useState("");
-  const [ord, setord] = useState("")
+  const [ord, setord] = useState("PXM_ORDEN")
   const [men, setmen] = useState("")
   const [lim2, setlim2] = useState(1000)
   const [lim22, setlim22] = useState(1000)
@@ -76,7 +76,7 @@ const Pm = () => {
     "MEN_CLAVE":clv,
     "MEN_NOMBRE":nmb,
     "MEN_DESC":des,
-    "ORDER":ord,
+    "ORDER":"",
     "BY":BY,
     "LIMIT1":LIM1,
     "LIMIT2":lim2
@@ -131,6 +131,22 @@ const Pm = () => {
 
   }
 
+  const onUpdateRegister=()=>{
+    Modal.confirm({
+        title: 'Estás seguro que deseas actualizar este registro?',
+        okText: 'Confirmar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk:()=>{
+            const data={PXM_ORDEN: editMenu?.PXM_ORDEN}
+            console.log(data)
+            axios.put(urlApi2+ "/" + editMenu?.PXM_NUMCTRL,data).then((response)=>{
+                traerTabla2()
+            })
+        }
+    })
+}
+
   let dataLIST = data.length > 0
   && data.map((item, i=0) => {
   return (
@@ -146,9 +162,9 @@ const Pm = () => {
         width: '40%',
       },
       {
-        title: 'Etiqueta',
-        dataIndex: 'PRG_DESC',
-        key:"PRG_DESC",
+        title: 'Orden',
+        dataIndex: 'PXM_ORDEN',
+        key:"PXM_ORDEN",
         width: '40%',
     },
   {
@@ -157,7 +173,9 @@ const Pm = () => {
       width: '20%',
       render:(record)=>{
           return <>
-          <div>
+          <div>              <EditOutlined onClick={()=>{
+                        onUpdate(record)
+                    }} style={{color:"orange"}} />
                 <DeleteOutlined onClick={()=>{
                     onDelete(record)
                 }} style={{color:"red", 
@@ -256,6 +274,21 @@ const Pm = () => {
         </div>
 
         <Table pagination={{position:["topRight"]}} columns={columns} dataSource={data2}/>
+
+        <Modal title="Editar orden" okText="Actualizar" cancelText="Regresar" visible={edit} onCancel={()=>{
+              setEdit(false)
+          }} onOk={()=>{
+              onUpdateRegister()
+              setEdit(false)
+          }}>
+              <label>Orden</label>
+              <Input value={editMenu?.PXM_ORDEN} required={true} onChange={(x)=>{
+                  setEditMenu((pre)=>{
+                      return {...pre, PXM_ORDEN: x.target.value}
+                  })
+              }}/><br></br><br></br>
+
+          </Modal>
 
   </div>
   )
