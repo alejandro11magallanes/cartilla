@@ -142,7 +142,8 @@ const traerTabla3 = async (clave) => {
 
     useEffect(()=>{
       cantidad()
-    },[])
+      console.log(data3.length)
+    },[data3])
 
   const handleChange =(value)=> {
     console.log(value)
@@ -161,7 +162,7 @@ const traerTabla3 = async (clave) => {
         okType: 'danger',
         cancelText: 'Cancelar',
         onOk:()=>{
-            if(editMenu?.PXM_ORDEN > data3.length+1){
+            if(editMenu?.PXM_ORDEN > data3.length){
                 message.error({ content: 'Elegiste un orden mayor al limite!', key, duration: 4, style: {
                     marginTop: '18vh',
                 }, });
