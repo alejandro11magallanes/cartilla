@@ -1,13 +1,39 @@
-import { Form, Input, Button, message} from 'antd';
+import { Form, Input, Button, message, Upload} from 'antd';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import React from 'react';
 import './componentes.css';
 import 'antd/dist/antd.min.css';
+import { UploadOutlined } from '@ant-design/icons';
+import ImgCrop from 'antd-img-crop';
 
 const {Item} = Form;
 const urlApi = 'http://127.0.0.1:4444/menu/create'
 
 const FormMenu = () => {
+
+    const [fileList, setFileList] = useState([])
+    const [valid, setValid] = useState("")
+
+    const beforeUpload = (files) => {
+      const isJpgOrPng = files.type === 'image/jpeg';
+      const isLt2M = files.size / 1024 / 1024 < 2;
+    
+      if (!isJpgOrPng) {
+        message.error('Solo puedes subir archivos JPG!');
+        setValid("NO")
+      }
+      else{
+        setValid("YES")
+      }
+    
+      if (!isLt2M) {
+        message.error('La imagen no debe pesar más de 2 MB!');
+        setValid("NO")
+      }
+
+      return isJpgOrPng && isLt2M;
+    };
+
     const key = 'updatable';
     const onFinish =async (values) => {
         console.log(values);
@@ -40,6 +66,33 @@ const FormMenu = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  const handleChange = ({fileList: newFileList}) => {
+    if(valid == "NO"){
+    }
+    else{
+      if (newFileList.status !== "uploading") {
+        setFileList(newFileList);
+      }
+    }
+  };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+  }
+
+  useEffect(()=>{
+    console.log(fileList)
+  },[fileList])
 
   return (
     <div>
@@ -96,6 +149,29 @@ const FormMenu = () => {
         ]}
       >
         <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Icono"
+        name="icon"
+        rules={[
+          {
+            required: false,
+            message: 'Inserta una descripción!',
+          },
+        ]}
+      >
+      <Upload beforeUpload={(x)=>{
+        beforeUpload(x)
+        return false}}
+        accept='.jpg'
+        listType="picture-card"
+        fileList={fileList}
+        onChange={handleChange}
+        onPreview={onPreview}
+      >
+        {fileList.length < 1 && '+ Subir'}
+      </Upload>
       </Form.Item>
 
       <Form.Item
