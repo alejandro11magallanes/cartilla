@@ -27,7 +27,7 @@ function SaveModalPXM(props){
         <img src={image} width={30} style={{float:'left'}} alt=""/>
     </a>
     <Modal okButtonProps={{ style: { display: 'none' } }} title="Agregar programa a menú" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-      <FormPXM valor={props.name}/>
+      <FormPXM tb={props.tabladato} op={props.orden} valor={props.name}/>
     </Modal>
   </>
   )

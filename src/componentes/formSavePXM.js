@@ -6,6 +6,14 @@ import React, { useEffect, useState } from 'react';
 import './componentes.css';
 import 'antd/dist/antd.min.css';
 import userEvent from '@testing-library/user-event';
+import { styled } from "@mui/material/styles";
+
+const CustomDisableInput = styled(TextField)(() => ({
+  ".MuiInputBase-input.Mui-disabled": {
+    WebkitTextFillColor: "#000",
+    color: "#000"
+  }
+}));
 
 const {Item} = Form;
 const urlApi = 'http://127.0.0.1:4444/proxmen/create'
@@ -16,7 +24,7 @@ function FormPXM (props){
     const [mens, setmens] = useState(null)
     const key = 'updatable';
     const [data, setData] = useState([]) 
-    const [orden, setOrden] = useState(0)
+    const [orden, setOrden] = useState(props.op)
 
     const traerTabla = async () => {
         axios.post(urlApi2, {PRG_NUMCTRL:"",PRG_CLAVE:"", PRG_NOMBRE:"", PRG_RUTA:"", PRG_DESC:"", ORDER:"", BY:"", LIMIT1:0, LIMIT2:9999},{
@@ -64,6 +72,7 @@ function FormPXM (props){
   const handleChange=(text)=>{
     setprg(text)
     setmens(props.valor)
+    setOrden(props.op)
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -74,15 +83,39 @@ function FormPXM (props){
     traerTabla()
   },[])
 
+  const existentes =()=>{
+    for (let index = 0; index < props.tb.length; index++) {
+      const element = {label:props.tb[index].PRG_NOMBRE, valor:props.tb[index].PRG_NUMCTRL, code:props.tb[index].PRG_CLAVE}
+      exist.push(element)
+    }
+  }
+
   const formatear =()=>{
-    for (let index = 0; index < data.length; index++) {
-      const element = {label:data[index].PRG_NOMBRE, valor:data[index].PRG_NUMCTRL}
+    existentes()
+    for (let index = 0; index < data.length; index++) {   
+      const element = {label:data[index].PRG_NOMBRE, valor:data[index].PRG_NUMCTRL, code:data[index].PRG_CLAVE}
       top100Films.push(element)
+    }
+    for (let inde = 0; inde < top100Films.length; inde++) {
+      var bandera = 0;
+      for (let index = 0; index < exist.length; index++) {
+        if(top100Films[inde].valor == exist[index].valor){
+          bandera = 1
+          break
+        }
+        else{
+          bandera = 0;
+        }
+      }
+      if(bandera == 0){
+        lista.push(top100Films[inde])
+      }
     }
   }
 
   const top100Films = []
-  const list = []
+  const exist = []
+  const lista = []
   
   return (
     <div>
@@ -95,7 +128,7 @@ function FormPXM (props){
         span: 16,
       }}
       initialValues={{
-        remember: true,
+        remember: false,
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -116,10 +149,10 @@ function FormPXM (props){
 {/*         <Input onChange={(x)=>handleChange(x.target.value)}/> */}
         <Autocomplete onClick={formatear()} onChange={(evemt, value)=>handleChange(value.valor)}
         disablePortal
-        getOptionLabel={(option) => option.label}
+        getOptionLabel={(option) => option.label + " - " + option.code}
         isOptionEqualToValue={(option)=> option.valor}
         id="combo-box-demo"
-        options={top100Films}
+        options={lista}
         sx={{ width: 300 }}
         renderInput={(params) => <TextField {...params} label="Programa" />}
         />
@@ -131,21 +164,16 @@ function FormPXM (props){
           offset:4,
         }}
         name="PXM_ORDEN"
-        rules={[
-          {
-            required: true,
-            message: 'Inserta el orden!',
-          },
-        ]}
       >
-        <TextField sx={{ width: 300 }}
-        onKeyPress={(event) => {
-          if (!/[0-9]/.test(event.key)) {
-              event.preventDefault();
-              }
-          }}
-         onChange={(x)=>setOrden(x.target.value)}
-         label="Orden"/>
+        <TextField hidden={true} sx={{ width: 300 }} InputProps={{ disableUnderline: true }}  label={"Orden: " + props.op}/>
+
+        <CustomDisableInput sx={{ width: 300 }}
+        variant="outlined"
+        value={props.op}
+        label="Orden"
+        disabled={true}
+      />
+
       </Form.Item>
 
       <Form.Item

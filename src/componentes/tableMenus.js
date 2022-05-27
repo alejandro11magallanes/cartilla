@@ -120,7 +120,7 @@ function TableMenu() {
           title: 'Descripción',
           dataIndex: 'MEN_DESC',
           key:"MEN_DESC",
-          width: '40%',
+          width: '20%',
       },
       {
           title: 'Acción',
@@ -149,7 +149,7 @@ function TableMenu() {
 
         <Form>
             <Row>
-            <Col lg={2} style={{padding:5}}>
+            <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
             <Form.Item>
             <Input value={clv} placeholder='Clave' onClick={()=>{
                 setnmb("")
@@ -166,7 +166,7 @@ function TableMenu() {
                 traerTabla()
             }}><img src={az}/></button>
             </Col>
-            <Col lg={2} offset={1} style={{padding:5}}>
+            <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
             <Form.Item>
             <Input value={nmb} placeholder="Nombre" onClick={()=>{
                 setclv("")
@@ -183,7 +183,7 @@ function TableMenu() {
                 traerTabla()
             }}><img src={az}/></button>
             </Col>
-            <Col lg={2} offset={1} style={{padding:5}}>
+            <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
             <Form.Item>
             <Input value={des} placeholder="Descripción" onClick={()=>{
                 setclv("")
@@ -200,22 +200,7 @@ function TableMenu() {
                 traerTabla()
             }}><img src={az}/></button>
             </Col>
-            <Col lg={2} offset={1} style={{padding:5}}>
-                        <Form.Item>
-                        <Input defaultValue={10} placeholder='Mostrar' onKeyPress={(event) => {
-                        if (!/[0-9]/.test(event.key)) {
-                            event.preventDefault();
-                            }
-                        }} onChange={(x)=>{
-                            if(x.target.value == ""){
-                                conteo()
-                            }else{
-                                setlim2(x.target.value)
-                            }
-                        }}/>
-                        </Form.Item>
-                </Col>
-            <Col lg={2} offset={1} style={{padding:5}}>
+            <Col lg={2} md={2} sm={2} offset={1} style={{padding:5}}>
             <Form.Item>
         <Button type="danger" htmlType="submit" onClick={()=>{
             setdes("")
@@ -232,7 +217,7 @@ function TableMenu() {
         </Form>
         </div>
 
-        <Table pagination={{position:["topRight"]}} columns={columns} dataSource={data}/>
+        <Table showHeader={false}  pagination={{position:["bottomCenter"]}} columns={columns} dataSource={data}/>
         <Modal title="Editar menú" okText="Actualizar" cancelText="Regresar" visible={edit} onCancel={()=>{
             setEdit(false)
         }} onOk={()=>{
