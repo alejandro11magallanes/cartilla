@@ -221,7 +221,7 @@ function TableMenu() {
 
         <Form>
             <Row>
-            <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
+            <Col lg={4} md={3} sm={3} xs={19} style={{padding:5}}>
             <Form.Item>
             <Input value={clv} placeholder='Clave' onClick={()=>{
                 setnmb("")
@@ -238,7 +238,7 @@ function TableMenu() {
                 traerTabla()
             }}><img src={az}/></button>
             </Col>
-            <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
+            <Col lg={4} md={3} sm={3} xs={19} style={{padding:5}}>
             <Form.Item>
             <Input value={nmb} placeholder="Nombre" onClick={()=>{
                 setclv("")
@@ -255,7 +255,7 @@ function TableMenu() {
                 traerTabla()
             }}><img src={az}/></button>
             </Col>
-            <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
+            <Col lg={4} md={3} sm={3} xs={19} style={{padding:5}}>
             <Form.Item>
             <Input value={des} placeholder="Descripción" onClick={()=>{
                 setclv("")
