@@ -172,11 +172,11 @@ function TableMenu() {
     ];
 
     const beforeUpload = (files) => {
-        const isJpgOrPng = files.type === 'image/jpeg';
+        const isJpgOrPng = files.type === 'image/png';
         const isLt2M = files.size / 1024 / 1024 < 2;
       
         if (!isJpgOrPng) {
-          message.error('Solo puedes subir archivos JPG!');
+          message.error('Solo puedes subir archivos PNG!');
           setValid("NO")
         }
         else{
@@ -319,7 +319,7 @@ function TableMenu() {
         onPreview(x)
         beforeUpload(x)
         return false}}
-        accept='.jpg'
+        accept='.png'
         listType="picture-card"
         fileList={fileList}
         onChange={handleChan}

@@ -18,11 +18,11 @@ const FormMenu = () => {
     const [des, setDes] = useState("")
 
     const beforeUpload = (files) => {
-      const isJpgOrPng = files.type === 'image/jpeg';
+      const isJpgOrPng = files.type === 'image/png';
       const isLt2M = files.size / 1024 / 1024 < 2;
     
       if (!isJpgOrPng) {
-        message.error('Solo puedes subir archivos JPG!');
+        message.error('Solo puedes subir archivos PNG!');
         setValid("NO")
       }
       else{
@@ -101,7 +101,6 @@ const FormMenu = () => {
 
   return (
     <div>
-      <p>{clave} + {nombre} + {des}</p>
         <Form
       name="login"
       labelCol={{
@@ -171,7 +170,7 @@ const FormMenu = () => {
         onPreview(x)
         beforeUpload(x)
         return false}}
-        accept='.jpg'
+        accept='.png'
         listType="picture-card"
         fileList={fileList}
         onChange={handleChange}
