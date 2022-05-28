@@ -40,7 +40,8 @@ const FormMenu = () => {
     const key = 'updatable';
     const onFinish =async (values) => {
         console.log(values);
-        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des}).then((response)=>{
+        if(valid == "YES"){
+          await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des}).then((response)=>{
             console.log(response.data);
             message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
             marginTop: '18vh',
@@ -64,6 +65,33 @@ const FormMenu = () => {
             }, });
             }, 1000);
         })
+      }
+      else{
+        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:"", MEN_DESC:des}).then((response)=>{
+          console.log(response.data);
+          message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
+          marginTop: '18vh',
+          }, });
+          setTimeout(() => {
+          message.success({ content: 'Datos Registrados', key, duration: 2, style: {
+              marginTop: '18vh',
+          }, });
+          }, 1000);
+          window.setTimeout(function() {
+          window.location.reload();
+      }, 4000);
+      }).catch(errorInfo =>{
+          console.log(errorInfo);
+          message.loading({ content: 'Verificando...', key,style: {
+          marginTop: '18vh',
+          }, });
+          setTimeout(() => {
+          message.error({ content: 'Por favor verifica que los datos se han llenado de manera correcta!', key, duration: 4, style: {
+              marginTop: '18vh',
+          }, });
+          }, 1000);
+      })
+      }
     };
 
   const onFinishFailed = (errorInfo) => {

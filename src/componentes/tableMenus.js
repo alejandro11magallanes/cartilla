@@ -100,17 +100,17 @@ function TableMenu() {
             cancelText: 'Cancelar',
             onOk:()=>{
                 var im
-                console.log(editMenu?.MEN_ICON.length)
+                console.log(editMenu?.MEN_ICON.length + " edit")
                 console.log(img.length)
-                if(img.length == 0){
-                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC }
+                if(img.length != 0 && valid == "YES"){
+                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE,MEN_ICON:img, MEN_DESC: editMenu?.MEN_DESC }
                     console.log(data)
                     axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
                         traerTabla()
                     })
                 }
-                else{
-                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE,MEN_ICON:img, MEN_DESC: editMenu?.MEN_DESC }
+                else {
+                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC }
                     console.log(data)
                     axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
                         traerTabla()
