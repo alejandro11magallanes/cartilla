@@ -12,6 +12,10 @@ const FormMenu = () => {
 
     const [fileList, setFileList] = useState([])
     const [valid, setValid] = useState("")
+    const [img, setImg] = useState("")
+    const [clave, setClave] = useState("")
+    const [nombre, setNmb] = useState("")
+    const [des, setDes] = useState("")
 
     const beforeUpload = (files) => {
       const isJpgOrPng = files.type === 'image/jpeg';
@@ -36,7 +40,7 @@ const FormMenu = () => {
     const key = 'updatable';
     const onFinish =async (values) => {
         console.log(values);
-        await axios.post(urlApi,values).then((response)=>{
+        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des}).then((response)=>{
             console.log(response.data);
             message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
             marginTop: '18vh',
@@ -77,24 +81,27 @@ const FormMenu = () => {
   };
 
   const onPreview = async (file) => {
-    let src = file.url;
+    const dato = new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
 
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
+      reader.onload = () =>resolve(reader.result);
+  })
 
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-  }
+  const str = await dato
+
+  setImg(str)
+
+}
 
   useEffect(()=>{
     console.log(fileList)
-  },[fileList])
+    console.log(img.length)
+  },[fileList, img])
 
   return (
     <div>
+      <p>{clave} + {nombre} + {des}</p>
         <Form
       name="login"
       labelCol={{
@@ -121,7 +128,7 @@ const FormMenu = () => {
           },
         ]}
       >
-        <Input />
+        <Input onChange={(x)=>setClave(x.target.value)} />
       </Form.Item>
 
       <Form.Item
@@ -134,7 +141,7 @@ const FormMenu = () => {
           },
         ]}
       >
-        <Input />
+        <Input onChange={(x)=>setNmb(x.target.value)}/>
       </Form.Item>
 
       <Form.Item
@@ -147,7 +154,7 @@ const FormMenu = () => {
           },
         ]}
       >
-        <Input />
+        <Input onChange={(x)=>setDes(x.target.value)}/>
       </Form.Item>
 
       <Form.Item
@@ -156,18 +163,18 @@ const FormMenu = () => {
         rules={[
           {
             required: false,
-            message: 'Inserta una descripción!',
+            message: 'Inserta un icono!',
           },
         ]}
       >
       <Upload beforeUpload={(x)=>{
+        onPreview(x)
         beforeUpload(x)
         return false}}
         accept='.jpg'
         listType="picture-card"
         fileList={fileList}
         onChange={handleChange}
-        onPreview={onPreview}
       >
         {fileList.length < 1 && '+ Subir'}
       </Upload>

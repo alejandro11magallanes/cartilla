@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons'
 import 'antd/dist/antd.min.css';
-import {Button, Col, Form, Input, Modal, Row, Select, Table} from 'antd';
+import {Button, Col, Form, Input, message, Modal, Row, Select, Table, Upload} from 'antd';
 import Item from 'antd/lib/list/Item';
 import './componentes.css'
 import az from '../imagenes/az.jpg'
@@ -19,6 +19,10 @@ function TableMenu() {
     const [des, setdes] = useState("");
     const [ord, setord] = useState("")
     const [lim2, setlim2] = useState(10)
+
+    const [fileList, setFileList] = useState([])
+    const [valid, setValid] = useState("")
+    const [img, setImg] = useState("")
 
     const { Option } = Select;
 
@@ -53,7 +57,9 @@ function TableMenu() {
 
     useEffect(()=>{
         traerTabla();
-    },[])
+        console.log(fileList.length)
+        console.log(img.length)
+    },[fileList, img])
 
 
     const onDelete=(id)=>{
@@ -93,11 +99,23 @@ function TableMenu() {
             okType: 'danger',
             cancelText: 'Cancelar',
             onOk:()=>{
-                const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC }
-                console.log(data)
-                axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
-                    traerTabla()
-                })
+                var im
+                console.log(editMenu?.MEN_ICON.length)
+                console.log(img.length)
+                if(img.length == 0){
+                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC }
+                    console.log(data)
+                    axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
+                        traerTabla()
+                    })
+                }
+                else{
+                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE,MEN_ICON:img, MEN_DESC: editMenu?.MEN_DESC }
+                    console.log(data)
+                    axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
+                        traerTabla()
+                    })
+                }
             }
         })
     }
@@ -123,6 +141,17 @@ function TableMenu() {
           width: '20%',
       },
       {
+          title:"Iconos",
+          dataIndex:"MEN_ICON",
+          key:"MEN_ICON",
+          width:"20%",
+          render:(record)=>{
+              return <>
+              <img width={40} height={40} src={record}></img>
+              </>
+          }
+      },
+      {
           title: 'Acción',
           key: 'ASU',
           width: '20%',
@@ -141,6 +170,49 @@ function TableMenu() {
           }
       }
     ];
+
+    const beforeUpload = (files) => {
+        const isJpgOrPng = files.type === 'image/jpeg';
+        const isLt2M = files.size / 1024 / 1024 < 2;
+      
+        if (!isJpgOrPng) {
+          message.error('Solo puedes subir archivos JPG!');
+          setValid("NO")
+        }
+        else{
+          setValid("YES")
+        }
+      
+        if (!isLt2M) {
+          message.error('La imagen no debe pesar más de 2 MB!');
+          setValid("NO")
+        }
+  
+        return isJpgOrPng && isLt2M;
+      };
+
+      const handleChan = ({fileList: newFileList}) => {
+        if(valid == "NO"){
+        }
+        else{
+          if (newFileList.status !== "uploading") {
+            setFileList(newFileList);
+          }
+        }
+      };
+    
+      const onPreview = async (file) => {
+        const dato = new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+    
+          reader.onload = () =>resolve(reader.result);
+      })
+    
+      const str = await dato
+    
+      setImg(str)
+    }
 
   return (
     <div>
@@ -242,6 +314,18 @@ function TableMenu() {
                     return {...pre, MEN_DESC: x.target.value}
                 })
             }}/><br></br><br></br>
+
+        <Upload beforeUpload={(x)=>{
+        onPreview(x)
+        beforeUpload(x)
+        return false}}
+        accept='.jpg'
+        listType="picture-card"
+        fileList={fileList}
+        onChange={handleChan}
+        >
+        {fileList.length < 1 && '+ Subir'}
+        </Upload>
 
         </Modal>
     </div>
