@@ -36,3 +36,6 @@
     background-color: transparent;
     border-color: transparent;
 }
+
+.ant-table table { font-size: 20px; }
+

@@ -4,6 +4,7 @@ import axios from "axios";
 import './componentes.css';
 import 'antd/dist/antd.min.css';
 import { UploadOutlined } from '@ant-design/icons';
+import Question from './Question';
 
 const {Item} = Form;
 const urlApi = 'http://127.0.0.1:4444/menu/create'
@@ -67,7 +68,7 @@ const FormMenu = () => {
         })
       }
       else{
-        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:"", MEN_DESC:des}).then((response)=>{
+        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:Question, MEN_DESC:des}).then((response)=>{
           console.log(response.data);
           message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
           marginTop: '18vh',
@@ -119,7 +120,6 @@ const FormMenu = () => {
   const str = await dato
 
   setImg(str)
-
 }
 
   useEffect(()=>{

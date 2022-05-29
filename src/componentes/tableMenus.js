@@ -19,14 +19,15 @@ function TableMenu() {
     const [des, setdes] = useState("");
     const [ord, setord] = useState("")
     const [lim2, setlim2] = useState(10)
-
+    const [estado, setEstado] = useState(0)
+    const [BY, setBY] = useState("")
     const [fileList, setFileList] = useState([])
     const [valid, setValid] = useState("")
     const [img, setImg] = useState("")
 
     const { Option } = Select;
 
-    const NUMERO ="", BY="", LIM1=0
+    const NUMERO ="", LIM1=0
 
     const body = JSON.stringify({
       "MEN_NUMCTRL":NUMERO,
@@ -59,7 +60,7 @@ function TableMenu() {
         traerTabla();
         console.log(fileList.length)
         console.log(img.length)
-    },[fileList, img])
+    },[fileList, img, ord, BY, des, clv, nmb])
 
 
     const onDelete=(id)=>{
@@ -109,7 +110,7 @@ function TableMenu() {
                         traerTabla()
                     })
                 }
-                else {
+                else {      
                     const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC }
                     console.log(data)
                     axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
@@ -147,7 +148,7 @@ function TableMenu() {
           width:"20%",
           render:(record)=>{
               return <>
-              <img width={40} height={40} src={record}></img>
+              <img width={30} height={30} src={record}></img>
               </>
           }
       },
@@ -212,13 +213,23 @@ function TableMenu() {
       const str = await dato
     
       setImg(str)
+
     }
+
+    const ORDBY = () =>{
+        if(estado == 0){
+            setEstado(1)
+            setBY("ASC")
+        }else if(estado == 1){
+            setEstado(0)
+            setBY("DESC")
+        }
+    } 
 
   return (
     <div>
 
         <div>
-
         <Form>
             <Row>
             <Col lg={4} md={3} sm={3} xs={19} style={{padding:5}}>
@@ -234,6 +245,8 @@ function TableMenu() {
             </Col>
             <Col>
             <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                setBY(0)
+                ORDBY()
                 setord("MEN_CLAVE")
                 traerTabla()
             }}><img src={az}/></button>
@@ -251,6 +264,8 @@ function TableMenu() {
             </Col>
             <Col>
             <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                setBY(0)
+                ORDBY()
                 setord("MEN_NOMBRE")
                 traerTabla()
             }}><img src={az}/></button>
@@ -268,6 +283,8 @@ function TableMenu() {
             </Col>
             <Col>
             <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                setBY(0)
+                ORDBY()
                 setord("MEN_DESC")
                 traerTabla()
             }}><img src={az}/></button>
@@ -279,6 +296,7 @@ function TableMenu() {
             setclv("")
             setnmb("")
             setord("")
+            setBY("")
             traerTabla()
         }}>
           Limpiar Filtros
