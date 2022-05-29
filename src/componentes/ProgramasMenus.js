@@ -36,6 +36,8 @@ const Pm = () => {
   const [ordenado, setOrdenado] = useState("")
   const [lim2, setlim2] = useState(1000)
   const [estado, setestado] = useState(false)
+  const [inputs, setInput] = useState(true)
+  const [aux, setAux] = useState(0)
   const [est, setEst] = useState(0)
   const [BY, setBY] = useState("")
   const [padre, setPadre] = useState(0)
@@ -130,7 +132,7 @@ const traerTabla3 = async (clave) => {
       traerTabla()
       actualizado()
       console.log(data3.length)
-    },[data3, etiqueta, nmb, ordenado, padre])
+    },[data3, etiqueta, nmb, ordenado, padre, Input])
 
   const handleChange =(value)=> {
     console.log(value)
@@ -138,6 +140,8 @@ const traerTabla3 = async (clave) => {
     traerTabla2(value)
     if(value!=""){
       setestado(true)
+      setInput(false)
+      setAux(1)
     }
     traerTabla3(value)
   }
@@ -228,8 +232,7 @@ const traerTabla3 = async (clave) => {
             setestado(false)
             }, 3000);
         }
-
-    if(estado == false){
+    if(aux != 0){
         setestado(true)
     }
   }
@@ -265,7 +268,7 @@ const traerTabla3 = async (clave) => {
                   <Row>
                   <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
                   <Form.Item>
-                  <Input value={nmb} placeholder='Programa' onClick={()=>{
+                  <Input disabled={inputs} value={nmb} placeholder='Programa' onClick={()=>{
                       setnmb("")
                       setEtiqueta("")
                       setOrdenado("")
@@ -277,7 +280,7 @@ const traerTabla3 = async (clave) => {
                   </Form.Item>
                   </Col>
                   <Col>
-                  <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                  <button disabled={inputs} style={{float:"right"}}  className='btn-transparente' onClick={()=>{
                       setEst(0)
                       ORDBY()
                       setord("PRG_CLAVE")
@@ -286,7 +289,7 @@ const traerTabla3 = async (clave) => {
                   </Col>
                   <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
                   <Form.Item>
-                  <Input value={ordenado} placeholder="Orden" onClick={()=>{
+                  <Input disabled={inputs} value={ordenado} placeholder="Orden" onClick={()=>{
                       setclv("")
                       setnmb("")
                       setord("PXM_ORDEN")
@@ -298,7 +301,7 @@ const traerTabla3 = async (clave) => {
                   </Form.Item>
                   </Col>
                   <Col>
-                  <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                  <button disabled={inputs} style={{float:"right"}} className='btn-transparente' onClick={()=>{
                       setEst(0)
                       ORDBY()
                       setord("PXM_ORDEN")
@@ -308,7 +311,7 @@ const traerTabla3 = async (clave) => {
 
                   <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
                   <Form.Item>
-                  <Input value={etiqueta} placeholder="Etiqueta" onClick={()=>{
+                  <Input disabled={inputs} value={etiqueta} placeholder="Etiqueta" onClick={()=>{
                       setclv("")
                       setnmb("")
                       setOrdenado("")
@@ -319,7 +322,7 @@ const traerTabla3 = async (clave) => {
                   </Form.Item>
                   </Col>
                   <Col>
-                  <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                  <button disabled={inputs} style={{float:"right"}} className='btn-transparente' onClick={()=>{
                       setEst(0)
                       ORDBY()
                       setord("PRG_NOMBRE")
@@ -329,7 +332,7 @@ const traerTabla3 = async (clave) => {
 
                   <Col lg={2} md={2} sm={2} offset={1} style={{padding:5}}>
                   <Form.Item>
-              <Button type="danger" htmlType="submit" onClick={()=>{
+              <Button disabled={inputs} type="danger" htmlType="submit" onClick={()=>{
                   setOrdenado("")
                   setclv("")
                   setnmb("")
