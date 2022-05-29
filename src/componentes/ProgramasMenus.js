@@ -11,6 +11,7 @@ import { render } from '@testing-library/react';
 import axios from 'axios';
 import az from '../imagenes/az.jpg'
 import SaveModalPXM from './saveModalPXM';
+import FormPXM from './formSavePXM';
 const urlApi = 'http://127.0.0.1:4444/menu'
 const urlApic = 'http://127.0.0.1:4444/menu/count'
 
@@ -35,15 +36,10 @@ const Pm = () => {
   const [ordenado, setOrdenado] = useState("")
   const [lim2, setlim2] = useState(1000)
   const [estado, setestado] = useState(false)
+  const [est, setEst] = useState(0)
+  const [BY, setBY] = useState("")
+  const [padre, setPadre] = useState(0)
   const key = 'updatable';
-
-    const cantidad = async () => {
-        axios.get(urlApic).then((response) =>
-        traerTabla(response.data)
-        ).catch(error =>{
-            console.log(error);
-        })
-    }
 
     const onDelete=(id)=>{
       Modal.confirm({
@@ -65,15 +61,7 @@ const Pm = () => {
       setEditMenu({...id})
   }
 
-    const conteo = async () =>{
-      axios.get(urlApic).then((response) =>
-      setlim2(response.data)
-      ).catch(error =>{
-          console.log(error);
-      })
-  }
-
-  const BY ="", LIM1=0 , NUMERO=""
+  const bai = "", NUMERO=""
 
   const body = JSON.stringify({
     "MEN_NUMCTRL":NUMERO,
@@ -81,9 +69,7 @@ const Pm = () => {
     "MEN_NOMBRE":nmb,
     "MEN_DESC":des,
     "ORDER":"",
-    "BY":BY,
-    "LIMIT1":LIM1,
-    "LIMIT2":lim2
+    "BY":bai,
   })
 
   const traerTabla = async () => {
@@ -106,7 +92,7 @@ const Pm = () => {
     if(clave == null){
       clave = men
     }
-    axios.post(urlApi2, {MEN_NUMCTRL: clave, PRG_NOMBRE: etiqueta, PRG_CLAVE:nmb, PRG_DESC: des, MEN_NOMBRE: "", ORDER: ord, BY: BY, LIMIT1:LIM1, LIMIT2: lim2, PXM_ORDEN:ordenado},{
+    axios.post(urlApi2, {MEN_NUMCTRL: clave, PRG_NOMBRE: etiqueta, PRG_CLAVE:nmb, PRG_DESC: des, MEN_NOMBRE: "", ORDER: ord, BY: BY, PXM_ORDEN:ordenado},{
 
       "headers": {
       
@@ -125,7 +111,7 @@ const traerTabla3 = async (clave) => {
     if(clave == null){
         clave = men
       }
-    axios.post(urlApi2, {MEN_NUMCTRL: clave, PRG_NOMBRE: "", PRG_CLAVE:"", PRG_DESC: "", MEN_NOMBRE: "", ORDER: "PXM_ORDEN", BY: "", LIMIT1:0, LIMIT2: 9999},{
+    axios.post(urlApi2, {MEN_NUMCTRL: clave, PRG_NOMBRE: "", PRG_CLAVE:"", PRG_DESC: "", MEN_NOMBRE: "", ORDER: "PXM_ORDEN", BY: ""},{
 
       "headers": {
       
@@ -141,9 +127,10 @@ const traerTabla3 = async (clave) => {
 }
 
     useEffect(()=>{
-      cantidad()
+      traerTabla()
+      actualizado()
       console.log(data3.length)
-    },[data3])
+    },[data3, etiqueta, nmb, ordenado, padre])
 
   const handleChange =(value)=> {
     console.log(value)
@@ -228,6 +215,35 @@ const traerTabla3 = async (clave) => {
   }
   ];
 
+  const handler = (param) =>{
+      setPadre(param)
+  }
+
+  const actualizado = () =>{
+    if(padre == 1){
+        setTimeout(() => {
+            traerTabla2()
+            traerTabla3()
+            setPadre(0)
+            setestado(false)
+            }, 3000);
+        }
+
+    if(estado == false){
+        setestado(true)
+    }
+  }
+
+  const ORDBY = () =>{
+    if(est == 0){
+        setEst(1)
+        setBY("ASC")
+    }else if(est == 1){
+        setEst(0)
+        setBY("DESC")
+    }
+}
+
   return (
     <div>
     <br/>
@@ -240,7 +256,7 @@ const traerTabla3 = async (clave) => {
       </Select>
       </Col>
       <Col style={{marginLeft:10}} xs={1} sm={2} md={4} lg={7}>
-      {estado? <SaveModalPXM tabladato={data2} orden={data3.length+1} name={men}/>: undefined}
+      {estado? <FormPXM tb={data2} op={data3.length+1} valor={men} padre={handler}/>: undefined}
       </Col>
     </Row><br></br>
 
@@ -257,15 +273,15 @@ const traerTabla3 = async (clave) => {
                   }} onChange={(x)=>{
                       setnmb(x.target.value)
                       traerTabla2()
-                      traerTabla3()
                   }}/>
                   </Form.Item>
                   </Col>
                   <Col>
                   <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                      setEst(0)
+                      ORDBY()
                       setord("PRG_CLAVE")
                       traerTabla2()
-                      traerTabla3()
                   }}><img src={az}/></button>
                   </Col>
                   <Col lg={5} md={4} sm={3} xs={19} style={{padding:5}}>
@@ -278,15 +294,15 @@ const traerTabla3 = async (clave) => {
                   }} onChange={(b)=>{
                       setOrdenado(b.target.value)
                       traerTabla2()
-                      traerTabla3()
                   }}/>
                   </Form.Item>
                   </Col>
                   <Col>
                   <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                      setEst(0)
+                      ORDBY()
                       setord("PXM_ORDEN")
                       traerTabla2()
-                      traerTabla3()
                   }}><img src={az}/></button>
                   </Col>
 
@@ -299,15 +315,15 @@ const traerTabla3 = async (clave) => {
                   }} onChange={(b)=>{
                       setEtiqueta(b.target.value)
                       traerTabla2()
-                      traerTabla3()
                   }}/>
                   </Form.Item>
                   </Col>
                   <Col>
                   <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                      setEst(0)
+                      ORDBY()
                       setord("PRG_NOMBRE")
                       traerTabla2()
-                      traerTabla3()
                   }}><img src={az}/></button>
                   </Col>
 
@@ -320,7 +336,6 @@ const traerTabla3 = async (clave) => {
                   setEtiqueta("")
                   setord("PXM_ORDEN")
                   traerTabla2()
-                  traerTabla3()
               }}>
                 Limpiar Filtros
               </Button>

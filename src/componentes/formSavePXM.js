@@ -1,4 +1,4 @@
-import { Form, Input, Button, message} from 'antd';
+import { Form, Input, Modal, Button, message} from 'antd';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField  from '@mui/material/TextField';
 import axios from "axios";
@@ -7,6 +7,8 @@ import './componentes.css';
 import 'antd/dist/antd.min.css';
 import userEvent from '@testing-library/user-event';
 import { styled } from "@mui/material/styles";
+import image from '../imagenes/plus.png'
+import './menuProp.css' 
 
 const CustomDisableInput = styled(TextField)(() => ({
   ".MuiInputBase-input.Mui-disabled": {
@@ -25,6 +27,8 @@ function FormPXM (props){
     const key = 'updatable';
     const [data, setData] = useState([]) 
     const [orden, setOrden] = useState(props.op)
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [input, setInput] = useState("")
 
     const traerTabla = async () => {
         axios.post(urlApi2, {PRG_NUMCTRL:"",PRG_CLAVE:"", PRG_NOMBRE:"", PRG_RUTA:"", PRG_DESC:"", ORDER:"", BY:"", LIMIT1:0, LIMIT2:9999},{
@@ -53,9 +57,6 @@ function FormPXM (props){
                 marginTop: '18vh',
             }, });
             }, 1000);
-            window.setTimeout(function() {
-            window.location.reload()
-        }, 4000);
         }).catch(errorInfo =>{
             console.log(errorInfo);
             message.loading({ content: 'Verificando...', key,style: {
@@ -70,7 +71,7 @@ function FormPXM (props){
     };
 
   const handleChange=(text)=>{
-    setprg(text)
+    setprg(text.valor)
     setmens(props.valor)
     setOrden(props.op)
   }
@@ -116,10 +117,37 @@ function FormPXM (props){
   const top100Films = []
   const exist = []
   const lista = []
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const someMethod = () => {
+    props.padre(1)
+  }
+
+  const guardar = () =>{
+    if(prg.length != 0){
+      handleCancel()
+      someMethod()
+    }
+  }
   
   return (
     <div>
-      <Form
+          <a onClick={showModal}>
+        <img src={image} width={30} style={{float:'left'}} alt=""/>
+    </a>
+    <Modal okButtonProps={{ style: { display: 'none' } }} title="Agregar programa a menú" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+    <Form
       name="login"
       labelCol={{
         span: 6,
@@ -147,7 +175,7 @@ function FormPXM (props){
         ]}
       >
 {/*         <Input onChange={(x)=>handleChange(x.target.value)}/> */}
-        <Autocomplete onClick={formatear()} onChange={(evemt, value)=>handleChange(value.valor)}
+        <Autocomplete onClick={formatear()} onChange={(evemt, value)=>handleChange(value)}
         disablePortal
         getOptionLabel={(option) => option.label + " - " + option.code}
         isOptionEqualToValue={(option)=> option.valor}
@@ -182,11 +210,12 @@ function FormPXM (props){
           span: 4,
         }}
       >
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" onClick={guardar} htmlType="submit">
           Guardar
         </Button>
       </Form.Item>
     </Form>
+    </Modal>
     </div>
   );
 };
