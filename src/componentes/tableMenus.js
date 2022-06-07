@@ -6,19 +6,23 @@ import {Button, Col, Form, Input, message, Modal, Row, Select, Table, Upload} fr
 import Item from 'antd/lib/list/Item';
 import './componentes.css'
 import az from '../imagenes/az.jpg'
+import { Autocomplete, TextField } from '@mui/material';
 const urlApi = ' http://127.0.0.1:4444/menu';
+const urlApisub = ' http://127.0.0.1:4444/submenu';
 const urlApic = ' http://127.0.0.1:4444/menu/count';
 
 function TableMenu() {
 
     const [edit, setEdit] = useState(false);
     const [data, setData] = useState([]);
+    const [datasub, setDatasub] = useState([])
     const [editMenu, setEditMenu] = useState(null);
     const [clv, setclv] = useState("");
+    const [submen, setSubmen] = useState("")
     const [nmb, setnmb] = useState("");
     const [des, setdes] = useState("");
-    const [ord, setord] = useState("")
-    const [lim2, setlim2] = useState(10)
+    const [ord, setord] = useState("MEN_CLAVE")
+    const [mo, setMo] = useState("")
     const [estado, setEstado] = useState(0)
     const [BY, setBY] = useState("")
     const [fileList, setFileList] = useState([])
@@ -29,15 +33,37 @@ function TableMenu() {
 
     const NUMERO ="", LIM1=0
 
+    const body2 = JSON.stringify({
+        "SUM_ETIQUETA": "",
+        "ORDER":"",
+        "BY":"",
+      })
+  
+      const traerTabla2 = async () => {
+        axios.post(urlApisub, body2,{
+  
+            "headers": {
+            
+            "content-type": "application/json",
+            
+            },
+            
+            }).then((response) =>
+        setDatasub(response.data)
+        ).catch(error =>{
+            console.log(error);
+        })
+    }
+
     const body = JSON.stringify({
       "MEN_NUMCTRL":NUMERO,
       "MEN_CLAVE":clv,
       "MEN_NOMBRE":nmb,
       "MEN_DESC":des,
+      "SUM_ETIQUETA":submen,
+      "MEN_ORDEN":mo,
       "ORDER":ord,
-      "BY":BY,
-      "LIMIT1":LIM1,
-      "LIMIT2":lim2
+      "BY":BY
     })
 
     const traerTabla = async () => {
@@ -58,9 +84,10 @@ function TableMenu() {
 
     useEffect(()=>{
         traerTabla();
-        console.log(fileList.length)
-        console.log(img.length)
-    },[fileList, img, ord, BY, des, clv, nmb])
+        traerTabla2()
+        // console.log(fileList.length)
+        // console.log(img.length)
+    },[fileList, img, ord, BY, des, clv, nmb, submen, mo])
 
 
     const onDelete=(id)=>{
@@ -78,19 +105,12 @@ function TableMenu() {
     }
 
     function handleChange(value) {
-        setlim2(value)
+
     }
 
     const onUpdate=(id)=>{
         setEdit(true)
         setEditMenu({...id})
-    }
-    const conteo = async () =>{
-        axios.get(urlApic).then((response) =>
-        setlim2(response.data)
-        ).catch(error =>{
-            console.log(error);
-        })
     }
 
     const onUpdateRegister=()=>{
@@ -100,22 +120,40 @@ function TableMenu() {
             okType: 'danger',
             cancelText: 'Cancelar',
             onOk:()=>{
-                var im
-                console.log(editMenu?.MEN_ICON.length + " edit")
-                console.log(img.length)
-                if(img.length != 0 && valid == "YES"){
-                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE,MEN_ICON:img, MEN_DESC: editMenu?.MEN_DESC }
-                    console.log(data)
-                    axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
-                        traerTabla()
-                    })
+                var cantidad = 0
+                for (let index = 0; index < data.length; index++) {
+                    if(data[index].SUM_NUMCTRL == editMenu?.SUM_NUMCTRL){
+                        cantidad = cantidad+1
+                    }
                 }
-                else {      
-                    const data={MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC }
-                    console.log(data)
-                    axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
-                        traerTabla()
-                    })
+                if(editMenu?.MEN_ORDEN > cantidad){
+                    message.error({ content: 'Elegiste un orden mayor al limite!', duration: 4, style: {
+                        marginTop: '18vh',
+                    }, });
+                }
+                else if(editMenu?.MEN_ORDEN <= 0){
+                    message.error({ content: 'Elegiste un orden menor al limite!', duration: 4, style: {
+                        marginTop: '18vh',
+                    }, });
+                }
+                else{
+                    var im
+                    console.log(editMenu?.MEN_ICON.length + " edit")
+                    console.log(img.length)
+                    if(img.length != 0 && valid == "YES"){
+                        const data={MEN_ORDEN:editMenu?.MEN_ORDEN,MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE,MEN_ICON:img, MEN_DESC: editMenu?.MEN_DESC, SUM_NUMCTRL:editMenu?.SUM_NUMCTRL }
+                        console.log(data)
+                        axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
+                            traerTabla()
+                        })
+                    }
+                    else {      
+                        const data={MEN_ORDEN:editMenu?.MEN_ORDEN,MEN_CLAVE: editMenu?.MEN_CLAVE, MEN_NOMBRE: editMenu?.MEN_NOMBRE, MEN_DESC: editMenu?.MEN_DESC, SUM_NUMCTRL:editMenu?.SUM_NUMCTRL }
+                        console.log(data)
+                        axios.put(urlApi+ "/" + editMenu?.MEN_NUMCTRL,data).then((response)=>{
+                            traerTabla()
+                        })
+                    }
                 }
             }
         })
@@ -142,20 +180,32 @@ function TableMenu() {
           width: '20%',
       },
       {
-          title:"Iconos",
-          dataIndex:"MEN_ICON",
-          key:"MEN_ICON",
-          width:"20%",
-          render:(record)=>{
-              return <>
-              <img width={30} height={30} src={record}></img>
-              </>
-          }
-      },
+        title: 'sum',
+        dataIndex: 'SUM_ETIQUETA',
+        key:"SUM_ETIQUETA",
+        width: '20%',
+    },
+    {
+        title: 'orden',
+        dataIndex: 'MEN_ORDEN',
+        key:"MEN_ORDEN",
+        width: '6%',
+    },
+    {
+        title:"Iconos",
+        dataIndex:"MEN_ICON",
+        key:"MEN_ICON",
+        width:"6%",
+        render:(record)=>{
+            return <>
+            <img width={30} height={30} src={record}></img>
+            </>
+        }
+    },
       {
           title: 'Acción',
           key: 'ASU',
-          width: '20%',
+          width: '8%',
           render:(record)=>{
               return <>
               <div>
@@ -216,6 +266,15 @@ function TableMenu() {
 
     }
 
+    const existentes =()=>{
+        for (let index = 0; index < datasub.length; index++) {
+          const element = {label:datasub[index].SUM_ETIQUETA, valor:datasub[index].SUM_NUMCTRL}
+          exist.push(element)
+        }
+      }
+    
+    const exist = []
+
     const ORDBY = () =>{
         if(estado == 0){
             setEstado(1)
@@ -237,6 +296,8 @@ function TableMenu() {
             <Input value={clv} placeholder='Clave' onClick={()=>{
                 setnmb("")
                 setdes("")
+                setSubmen("")
+                setMo("")
             }} onChange={(x)=>{
                 setclv(x.target.value)
                 traerTabla()
@@ -256,6 +317,8 @@ function TableMenu() {
             <Input value={nmb} placeholder="Nombre" onClick={()=>{
                 setclv("")
                 setdes("")
+                setSubmen("")
+                setMo("")
             }} onChange={(a)=>{
                 setnmb(a.target.value)
                 traerTabla()
@@ -275,6 +338,8 @@ function TableMenu() {
             <Input value={des} placeholder="Descripción" onClick={()=>{
                 setclv("")
                 setnmb("")
+                setSubmen("")
+                setMo("")
             }} onChange={(b)=>{
                 setdes(b.target.value)
                 traerTabla()
@@ -289,13 +354,60 @@ function TableMenu() {
                 traerTabla()
             }}><img src={az}/></button>
             </Col>
-            <Col lg={2} md={2} sm={2} offset={1} style={{padding:5}}>
+
+            <Col lg={4} md={3} sm={3} xs={19} style={{padding:5}}>
+            <Form.Item>
+            <Input value={submen} placeholder="Submenú" onClick={()=>{
+                setclv("")
+                setdes("")
+                setnmb("")
+                setMo("")
+            }} onChange={(a)=>{
+                setSubmen(a.target.value)
+                traerTabla()
+            }}/>
+            </Form.Item>
+            </Col>
+            <Col>
+            <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                setBY(0)
+                ORDBY()
+                setord("SUM_ETIQUETA")
+                traerTabla()
+            }}><img src={az}/></button>
+            </Col>
+
+            <Col lg={2} md={3} sm={3} xs={19} style={{padding:5}}>
+            <Form.Item>
+            <Input value={mo} placeholder="Orden" onClick={()=>{
+                setclv("")
+                setdes("")
+                setnmb("")
+                setSubmen("")
+            }} onChange={(a)=>{
+                setMo(a.target.value)
+                traerTabla()
+            }}/>
+            </Form.Item>
+            </Col>
+            <Col>
+            <button style={{float:"right"}} className='btn-transparente' onClick={()=>{
+                setBY(0)
+                ORDBY()
+                setord("MEN_ORDEN")
+                traerTabla()
+            }}><img src={az}/></button>
+            </Col>
+
+            <Col lg={1} md={2} sm={2} style={{padding:5}}>
             <Form.Item>
         <Button type="danger" htmlType="submit" onClick={()=>{
+            setSubmen("")
+            setMo("")
             setdes("")
             setclv("")
             setnmb("")
-            setord("")
+            setord("MEN_CLAVE")
             setBY("")
             traerTabla()
         }}>
@@ -332,6 +444,24 @@ function TableMenu() {
                     return {...pre, MEN_DESC: x.target.value}
                 })
             }}/><br></br><br></br>
+
+        <Autocomplete onClick={existentes()} onChange={(evemt, value)=>setEditMenu((pre)=>{
+            return {...pre, SUM_NUMCTRL: value.valor}
+        })}
+        disablePortal
+        getOptionLabel={(option) => option.label}
+        isOptionEqualToValue={(option)=> option.valor}
+        id="combo-box-demo"
+        options={exist}
+        sx={{ width: 315}}
+        renderInput={(params) => <TextField {...params} label={editMenu?.SUM_ETIQUETA} />}
+        /><br></br>
+        <label>Orden</label>
+        <Input value={editMenu?.MEN_ORDEN} placeholder="ORDEN" onChange={(x)=>{
+            setEditMenu((pre)=>{
+                return {...pre, MEN_ORDEN: x.target.value}
+            })
+        }}/><br></br><br></br>
 
         <Upload beforeUpload={(x)=>{
         onPreview(x)

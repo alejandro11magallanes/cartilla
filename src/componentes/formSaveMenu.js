@@ -5,18 +5,44 @@ import './componentes.css';
 import 'antd/dist/antd.min.css';
 import { UploadOutlined } from '@ant-design/icons';
 import Question from './Question';
+import { Autocomplete, TextField } from '@mui/material';
 
 const {Item} = Form;
 const urlApi = 'http://127.0.0.1:4444/menu/create'
+const urlApic = 'http://127.0.0.1:4444/submenu'
 
 const FormMenu = () => {
 
     const [fileList, setFileList] = useState([])
+    const [data, setData] = useState([])
     const [valid, setValid] = useState("")
     const [img, setImg] = useState("")
     const [clave, setClave] = useState("")
     const [nombre, setNmb] = useState("")
     const [des, setDes] = useState("")
+    const [sub, setSub] = useState(0)
+
+    const body = JSON.stringify({
+      "SUM_ETIQUETA": "",
+      "ORDER":"",
+      "BY":"",
+    })
+
+    const traerTabla = async () => {
+      axios.post(urlApic, body,{
+
+          "headers": {
+          
+          "content-type": "application/json",
+          
+          },
+          
+          }).then((response) =>
+      setData(response.data)
+      ).catch(error =>{
+          console.log(error);
+      })
+  }
 
     const beforeUpload = (files) => {
       const isJpgOrPng = files.type === 'image/png';
@@ -42,7 +68,7 @@ const FormMenu = () => {
     const onFinish =async (values) => {
         console.log(values);
         if(valid == "YES"){
-          await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des}).then((response)=>{
+          await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des, SUM_NUMCTRL:sub}).then((response)=>{
             console.log(response.data);
             message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
             marginTop: '18vh',
@@ -68,7 +94,7 @@ const FormMenu = () => {
         })
       }
       else{
-        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:Question, MEN_DESC:des}).then((response)=>{
+        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:Question, MEN_DESC:des, SUM_NUMCTRL:sub}).then((response)=>{
           console.log(response.data);
           message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
           marginTop: '18vh',
@@ -122,10 +148,24 @@ const FormMenu = () => {
   setImg(str)
 }
 
+const Auto = (value) =>{
+  setSub(value.valor)
+}
+
   useEffect(()=>{
+    traerTabla()
     console.log(fileList)
     console.log(img.length)
   },[fileList, img])
+
+  const existentes =()=>{
+    for (let index = 0; index < data.length; index++) {
+      const element = {label:data[index].SUM_ETIQUETA, valor:data[index].SUM_NUMCTRL}
+      exist.push(element)
+    }
+  }
+
+  const exist = []
 
   return (
     <div>
@@ -182,6 +222,29 @@ const FormMenu = () => {
         ]}
       >
         <Input onChange={(x)=>setDes(x.target.value)}/>
+      </Form.Item>
+
+      <Form.Item wrapperCol={{
+          span: 4,
+          offset:6,
+        }}
+        name="SUM_NUMCTRL"
+        rules={[
+          {
+            required: true,
+            message: 'Inserta un submenú!',
+          },
+        ]}
+      >
+        <Autocomplete onClick={existentes()} onChange={(evemt, value)=>Auto(value)}
+        disablePortal
+        getOptionLabel={(option) => option.label}
+        isOptionEqualToValue={(option)=> option.valor}
+        id="combo-box-demo"
+        options={exist}
+        sx={{ width: 315}}
+        renderInput={(params) => <TextField {...params} label="Submenú" />}
+        />
       </Form.Item>
 
       <Form.Item
