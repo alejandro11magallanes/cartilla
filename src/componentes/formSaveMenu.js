@@ -10,6 +10,7 @@ import { Autocomplete, TextField } from '@mui/material';
 const {Item} = Form;
 const urlApi = 'http://127.0.0.1:4444/menu/create'
 const urlApic = 'http://127.0.0.1:4444/submenu'
+const urlApi2 = 'http://127.0.0.1:4444/menu'
 
 const FormMenu = () => {
 
@@ -20,7 +21,9 @@ const FormMenu = () => {
     const [clave, setClave] = useState("")
     const [nombre, setNmb] = useState("")
     const [des, setDes] = useState("")
-    const [sub, setSub] = useState(0)
+    const [sub, setSub] = useState(null)
+    const [datos, setDatos] = useState([])
+    const [posicion, setPosicion] = useState(null)
 
     const body = JSON.stringify({
       "SUM_ETIQUETA": "",
@@ -44,6 +47,22 @@ const FormMenu = () => {
       })
   }
 
+  const traerTabla2 = async () => {
+    axios.post(urlApi2, {MEN_DESC:""},{
+
+        "headers": {
+        
+        "content-type": "application/json",
+        
+        },
+        
+        }).then((response) =>
+    setDatos(response.data)
+    ).catch(error =>{
+        console.log(error);
+    })
+}
+
     const beforeUpload = (files) => {
       const isJpgOrPng = files.type === 'image/png';
       const isLt2M = files.size / 1024 / 1024 < 2;
@@ -66,9 +85,9 @@ const FormMenu = () => {
 
     const key = 'updatable';
     const onFinish =async (values) => {
-        console.log(values);
+        console.log("sub ", sub, " pos ", posicion);
         if(valid == "YES"){
-          await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des, SUM_NUMCTRL:sub}).then((response)=>{
+          await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:img, MEN_DESC:des, MEN_ORDEN: posicion, SUM_NUMCTRL:sub}).then((response)=>{
             console.log(response.data);
             message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
             marginTop: '18vh',
@@ -94,7 +113,7 @@ const FormMenu = () => {
         })
       }
       else{
-        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:Question, MEN_DESC:des, SUM_NUMCTRL:sub}).then((response)=>{
+        await axios.post(urlApi,{MEN_CLAVE:clave, MEN_NOMBRE:nombre, MEN_ICON:Question, MEN_DESC:des, MEN_ORDEN: posicion, SUM_NUMCTRL:sub}).then((response)=>{
           console.log(response.data);
           message.loading({ content: 'Ingresando Datos...',duration: 2, key,style: {
           marginTop: '18vh',
@@ -150,13 +169,21 @@ const FormMenu = () => {
 
 const Auto = (value) =>{
   setSub(value.valor)
+  var cantidad = 1
+  for (let index = 0; index < datos.length; index++) {
+    if(datos[index].SUM_NUMCTRL == value.valor){
+      cantidad = cantidad+1
+    }
+  }
+  setPosicion(cantidad)
 }
 
   useEffect(()=>{
     traerTabla()
+    traerTabla2()
     console.log(fileList)
     console.log(img.length)
-  },[fileList, img])
+  },[fileList, img, posicion, sub])
 
   const existentes =()=>{
     for (let index = 0; index < data.length; index++) {
