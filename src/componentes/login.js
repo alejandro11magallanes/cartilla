@@ -27,7 +27,7 @@ export default class login extends Component {
           }, });
         }, 1000);
         window.setTimeout(function() {
-          window.location.href = './inicio/menuProp';
+          window.location.href = './inicio/menuMenus';
       }, 3000);
       }).catch(errorInfo =>{
         console.log(errorInfo);

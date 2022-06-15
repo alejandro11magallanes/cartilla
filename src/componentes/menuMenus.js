@@ -8,6 +8,8 @@ import SaveModalMenu from './saveModalMenu';
 import TableMenu from './tableMenus';
 import Pm from './ProgramasMenus';
 import SubMenu from './SubMenu';
+import MenuRaza from './RAZA/menuRaza';
+import MenuMascota from './Mascota/menuMascota';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -30,12 +32,16 @@ export default () => (
       <Header className="site-layout-sub-header-background nav-color" style={{ padding: 0 }} />
       <Content style={{ margin: '24px 16px 0' }}>
         <div className="site-layout-background" style={{ padding: 24, minHeight: 360}}>
-            <SaveModalMenu /><br></br><br></br>
-            <TableMenu />
+            {/* <SaveModalMenu /><br></br><br></br>
+            <TableMenu /> */}
 
             {/* <Pm /> */}
 
             {/* <SubMenu /> */}
+
+            {/* <MenuRaza/> */}
+
+            <MenuMascota/>
 
         </div>
       </Content>
