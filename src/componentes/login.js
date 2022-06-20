@@ -5,6 +5,7 @@ import 'antd/dist/antd.min.css';
 import './componentes.css';
 import image from "./logopiki.png";
 import axios from "axios";
+import Cookies from 'universal-cookie';
 
 const {Item} = Form;
 const {Password} = Input;
@@ -15,9 +16,10 @@ export default class login extends Component {
   render() {
 
     const onFinish = async (values) => {
-      console.log(values);
       await axios.post(urlApi,values).then((response)=>{
-        console.log(response.data.datos);
+        console.log(response.data.datos.PRO_NUMCTRL);
+        const cookie = new Cookies()
+        cookie.set('usuarioID', response.data.datos.PRO_NUMCTRL,{path:"/"})
         message.loading({ content: 'Verificando...', key,style: {
           marginTop: '18vh',
         }, });

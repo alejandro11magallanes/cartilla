@@ -10,6 +10,7 @@ import Pm from './ProgramasMenus';
 import SubMenu from './SubMenu';
 import MenuRaza from './RAZA/menuRaza';
 import MenuMascota from './Mascota/menuMascota';
+import CustomColumnMenu from './Vacunas/MenuVacunas';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -35,13 +36,15 @@ export default () => (
             {/* <SaveModalMenu /><br></br><br></br>
             <TableMenu /> */}
 
-            {/* <Pm /> */}
+            <Pm />
 
             {/* <SubMenu /> */}
 
             {/* <MenuRaza/> */}
 
-            <MenuMascota/>
+            {/* <MenuMascota/> */}
+
+            {/* <CustomColumnMenu/> */}
 
         </div>
       </Content>

@@ -5,23 +5,32 @@ import {EditOutlined, DeleteOutlined} from '@ant-design/icons'
 import az from '../../imagenes/az.jpg'
 import '../componentes.css'
 import FormMAS from "./FormSaveMas";
+import Cookies from "universal-cookie";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TextField } from "@mui/material";
 
 const urlApi = ' http://127.0.0.1:4444/mascota';
 
 const MenuMascota = () =>{
+    const cookie = new Cookies()
     const [data, setData] = useState([])
     const [edit, setEdit] = useState(false);
     const [editMenu, setEditMenu] = useState(null);
     const [nombre, setNombre] = useState("")
+    const [raza, setRaz] = useState("")
+    const [fecha, setFecha] = useState("")
     const [ORD, setORD] = useState("MAS_NOMBRE")
     const [BY, setBY] = useState("ASC")
+    const [value, setValue] = useState(null);
 
     useEffect(()=>{
         traerTabla()
-    },[nombre, BY])
+    },[nombre, BY, raza, fecha])
 
     const traerTabla = async () => {
-        axios.post(urlApi, {MAS_NOMBRE:nombre, ORDER:ORD, BY: BY},{
+        axios.post(urlApi, {PRO_NUMCTRL:cookie.get("usuarioID"),MAS_NOMBRE:nombre, MAS_FECHANAC: fecha, MAS_RAZA: raza, ORDER:ORD, BY: BY},{
     
             "headers": {
             
@@ -43,7 +52,7 @@ const MenuMascota = () =>{
             okType: 'danger',
             cancelText: 'Cancelar',
             onOk:()=>{
-                axios.delete(urlApi+ "/" + id.RAZ_NUMCTRL).then((response)=>{
+                axios.delete(urlApi+ "/" + id.MAS_NUMCTRL).then((response)=>{
                     traerTabla()
                 })
             }
@@ -62,9 +71,9 @@ const MenuMascota = () =>{
             okType: 'danger',
             cancelText: 'Cancelar',
             onOk:()=>{
-                const data={RAZ_NOMBRE: editMenu?.RAZ_NOMBRE}
+                const data={MAS_NOMBRE: editMenu?.MAS_NOMBRE}
                 console.log(data)
-                axios.put(urlApi+ "/" + editMenu?.RAZ_NUMCTRL,data).then((response)=>{
+                axios.put(urlApi+ "/" + editMenu?.MAS_NUMCTRL,data).then((response)=>{
                     traerTabla()
                 })
             }
@@ -76,12 +85,6 @@ const MenuMascota = () =>{
             title: 'MASCOTA',
             dataIndex: 'MAS_NOMBRE',
             key: 'MAS_NOMBRE',
-            width: '20%',
-          },
-          {
-            title: 'PROPIETARIO',
-            dataIndex: 'PRO_NOMBRE',
-            key: 'PRO_NOMBRE',
             width: '20%',
           },
           {
@@ -104,7 +107,7 @@ const MenuMascota = () =>{
       {
           title: 'Acción',
           key: 'ASU',
-          width: '10%',
+          width: '20%',
           render:(record)=>{
               return <>
               <div>
@@ -138,7 +141,7 @@ const MenuMascota = () =>{
                 </Col>
             </Row><br></br>
             <Row>
-                <Col lg={6} style={{padding:5}}>
+                <Col lg={4} style={{padding:5}}>
                 <Input value={nombre} placeholder="Nombre" onChange={(x)=>{
                     setNombre(x.target.value)
                     traerTabla()
@@ -146,12 +149,43 @@ const MenuMascota = () =>{
                 </Col>
                 <Col>
                 <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                    setORD("MAS_NOMBRE")
                     ordenar()
                     traerTabla()
                 }}><img src={az}/></button>
                 </Col>
+
+                <Col lg={5} style={{padding:5}}>
+                <Input value={fecha} placeholder="Fecha" onChange={(x)=>{
+                    setFecha(x.target.value)
+                    traerTabla()
+                }}/>
+                </Col>
+                <Col>
+                <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                    setORD("MAS_FECHANAC")
+                    ordenar()
+                    traerTabla()
+                }}><img src={az}/></button>
+                </Col>
+
+                <Col lg={5} style={{padding:5}}>
+                <Input value={raza} placeholder="Raza" onChange={(x)=>{
+                    setRaz(x.target.value)
+                    traerTabla()
+                }}/>
+                </Col>
+                <Col>
+                <button style={{float:"right"}}  className='btn-transparente' onClick={()=>{
+                    setORD("MAS_RAZA")
+                    ordenar()
+                    traerTabla()
+                }}><img src={az}/></button>
+                </Col>
+
                 <Col lg={1} md={2} sm={2} style={{padding:5}}>
                 <Button type="danger" htmlType="submit" onClick={()=>{
+                    setORD("MAS_NOMBRE")
                     setNombre("")
                     setBY("ASC")
                     traerTabla()
@@ -174,6 +208,7 @@ const MenuMascota = () =>{
                         return {...pre, MAS_NOMBRE: x.target.value}
                     })
                 }}/><br></br><br></br>
+
             </Modal>
 
         </div>

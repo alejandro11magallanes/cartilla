@@ -5,7 +5,10 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.1",
+    "@mui/x-data-grid-pro": "^5.12.2",
+    "@mui/x-date-pickers": "^5.0.0-alpha.6",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
@@ -17,6 +20,7 @@
     "react-highlight-words": "^0.18.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "universal-cookie": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
